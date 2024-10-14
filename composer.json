@@ -1,15 +1,18 @@
 {
-    "name": "robsontenorio/laravel-keycloak-guard",
-    "description": "🔑 Simple Keycloak Guard for Laravel",
+    "name": "erimeilis/laravel-multikeycloak-guard",
+    "description": "🔑 Multiply Realms Keycloak Guard for Laravel",
     "keywords": [
         "laravel",
         "keycloak"
     ],
-    "homepage": "https://github.com/robsontenorio/laravel-keycloak-guard",
+    "homepage": "https://github.com/erimeilis/laravel-multikeycloak-guard",
     "license": "MIT",
     "authors": [
         {
             "name": "Robson Tenório"
+        },
+        {
+            "name": "Eri Meilis"
         }
     ],
     "minimum-stability": "dev",

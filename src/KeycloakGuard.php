@@ -15,6 +15,7 @@ class KeycloakGuard implements Guard
     protected $config;
     protected $user;
     protected $provider;
+    protected $siteId;
     protected $decodedToken;
     protected Request $request;
 
@@ -37,7 +38,9 @@ class KeycloakGuard implements Guard
     protected function authenticate()
     {
         try {
-            $this->decodedToken = Token::decode($this->getTokenForRequest(), $this->config['realm_public_key'], $this->config['leeway'], $this->config['token_encryption_algorithm']);
+            $this->siteId = $this->getSiteId();
+            $site = $this->config['realms_src_model']::where('site_id', $this->siteId)->first();
+            $this->decodedToken = Token::decode($this->getTokenForRequest(), $site->keycloak_key, $this->config['leeway'], $this->config['token_encryption_algorithm']);
         } catch (\Exception $e) {
             throw new TokenException($e->getMessage());
         }
@@ -56,9 +59,19 @@ class KeycloakGuard implements Guard
      */
     public function getTokenForRequest()
     {
+        return $this->request->bearerToken() ?? "";
+    }
+
+    /**
+     * Get site ID.
+     *
+     * @return string
+     */
+    public function getSiteId()
+    {
         $inputKey = $this->config['input_key'] ?? "";
 
-        return $this->request->bearerToken() ?? $this->request->input($inputKey);
+        return $this->request->input($inputKey) ?? 0;
     }
 
     /**
@@ -156,7 +169,7 @@ class KeycloakGuard implements Guard
             $methodOnProvider = $this->config['user_provider_custom_retrieve_method'] ?? null;
 
             if ($methodOnProvider) {
-                $user = $this->provider->{$methodOnProvider}($this->decodedToken, $credentials);
+                $user = $this->provider->{$methodOnProvider}($this->decodedToken, $this->siteId, $credentials);
             } else {
                 $user = $this->provider->retrieveByCredentials($credentials);
             }

@@ -59,7 +59,7 @@ This package helps you authenticate users on a Laravel API based on JWT tokens g
 Require the package
 
 ```
-composer require robsontenorio/laravel-keycloak-guard
+composer require erimeilis/laravel-multikeycloak-guard
 ```
 
 **If you are using Lumen**, register the provider in your boostrap app file `bootstrap/app.php`.  
@@ -72,7 +72,9 @@ $app->register(\KeycloakGuard\KeycloakGuardServiceProvider::class);
 ### Example configuration (.env)
 
 ```.env
-KEYCLOAK_REALM_PUBLIC_KEY=MIIBIj...         # Get it on Keycloak admin web console.
+KEYCLOAK_REALMS_SRC_MODEL=Site              # Your model that stores Keycloak public keys (must contain 'site_id' and 'keycloak_key').
+KEYCLOAK_TOKEN_INPUT_KEY=site               # Custom key in request with site id.
+#KEYCLOAK_REALM_PUBLIC_KEY=MIIBIj...        # Get it on Keycloak admin web console.
 KEYCLOAK_LOAD_USER_FROM_DATABASE=false      # You can opt to not load user from database, and use that one provided from JWT token.
 KEYCLOAK_APPEND_DECODED_TOKEN=true          # Append the token info to user object.
 KEYCLOAK_ALLOWED_RESOURCES=my-api           # The JWT token must contain this resource `my-api`.

@@ -1,7 +1,9 @@
 <?php
 
 return [
-    'realm_public_key' => env('KEYCLOAK_REALM_PUBLIC_KEY', null),
+    //'realm_public_key' => env('KEYCLOAK_REALM_PUBLIC_KEY', null),
+
+    'realms_src_model' => env('KEYCLOAK_REALMS_SRC_MODEL', 'Site'),
 
     'token_encryption_algorithm' => env('KEYCLOAK_TOKEN_ENCRYPTION_ALGORITHM', 'RS256'),
 

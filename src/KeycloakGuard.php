@@ -167,15 +167,19 @@ class KeycloakGuard implements Guard
 
         if ($this->config['load_user_from_database']) {
             $methodOnProvider = $this->config['user_provider_custom_retrieve_method'] ?? null;
-
             if ($methodOnProvider) {
                 $user = $this->provider->{$methodOnProvider}($this->decodedToken, $this->siteId, $credentials);
             } else {
                 $user = $this->provider->retrieveByCredentials($credentials);
             }
 
+            $createMethodOnProvider = $this->config['user_provider_custom_create_method'] ?? null;
+            if ($createMethodOnProvider) {
+                $user = $this->provider->{$createMethodOnProvider}($this->decodedToken, $this->siteId, $credentials);
+            }
+
             if (!$user) {
-                throw new UserNotFoundException("User not found. Credentials: ".json_encode($credentials));
+                throw new UserNotFoundException("User not found and failed to create. Credentials: ".json_encode($credentials));
             }
         } else {
             $class = $this->provider->getModel();

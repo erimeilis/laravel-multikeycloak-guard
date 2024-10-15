@@ -1,14 +1,3 @@
-<p align="center">
-  <img src="bird.png">
-</p>
-<p align="center">
-&nbsp;
-        <img src="https://img.shields.io/packagist/v/robsontenorio/laravel-keycloak-guard.svg" />
-        <img src="https://img.shields.io/packagist/dt/robsontenorio/laravel-keycloak-guard.svg" />
-      <img src="https://codecov.io/gh/robsontenorio/laravel-keycloak-guard/branch/master/graph/badge.svg?token=8ZpDarpss1"/>
-
-</p>
-
 # Multiply Realms Keycloak Guard for Laravel
 
 This package helps you authenticate users on a Laravel API based on JWT tokens generated from **Keycloak Server**.
@@ -160,6 +149,12 @@ If you have an `users` table and want it to be updated (creating or updating use
 This will allow you to customize the way you want to interact with your database, before matching and delivering the authenticated user object, having all the information contained in the (valid) access token available. To read more about custom UserProviders, please check [Laravel's documentation about](https://laravel.com/docs/8.x/authentication#adding-custom-user-providers).
 
 If using this feature, obviously, values defined for `user_provider_credential` and `token_principal_attribute` will be ignored.
+
+✔️ **user_provider_custom_create_method**
+
+_Default is `null`._
+
+Custom UserProvider method to create user based on token
 
 ✔️ **user_provider_credential**
 

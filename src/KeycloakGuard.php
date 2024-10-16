@@ -75,10 +75,10 @@ class KeycloakGuard implements Guard
     }
 
     /**
-       * Determine if the current user is authenticated.
-       *
-       * @return bool
-       */
+     * Determine if the current user is authenticated.
+     *
+     * @return bool
+     */
     public function check()
     {
         return !is_null($this->user());
@@ -104,10 +104,10 @@ class KeycloakGuard implements Guard
         return !$this->check();
     }
 
-     /**
+    /**
      * Set the current user.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param \Illuminate\Contracts\Auth\Authenticatable $user
      * @return void
      */
     public function setUser(Authenticatable $user)
@@ -145,7 +145,7 @@ class KeycloakGuard implements Guard
         }
     }
 
-     /**
+    /**
      * Returns full decoded JWT token from athenticated user
      *
      * @return mixed|null
@@ -158,7 +158,7 @@ class KeycloakGuard implements Guard
     /**
      * Validate a user's credentials.
      *
-     * @param  array  $credentials
+     * @param array $credentials
      * @return bool
      */
     public function validate(array $credentials = [])
@@ -173,13 +173,14 @@ class KeycloakGuard implements Guard
                 $user = $this->provider->retrieveByCredentials($credentials);
             }
 
-            $createMethodOnProvider = $this->config['user_provider_custom_create_method'] ?? null;
-            if ($createMethodOnProvider) {
-                $user = $this->provider->{$createMethodOnProvider}($this->decodedToken, $this->siteId, $credentials);
-            }
-
             if (!$user) {
-                throw new UserNotFoundException("User not found and failed to create. Credentials: ".json_encode($credentials));
+                $createMethodOnProvider = $this->config['user_provider_custom_create_method'] ?? null;
+                if ($createMethodOnProvider) {
+                    $user = $this->provider->{$createMethodOnProvider}($this->decodedToken, $this->siteId, $credentials);
+                }
+                if (!$user) {
+                    throw new UserNotFoundException("User not found and failed to create. Credentials: " . json_encode($credentials));
+                }
             }
         } else {
             $class = $this->provider->getModel();
@@ -187,7 +188,6 @@ class KeycloakGuard implements Guard
         }
 
         $this->setUser($user);
-
         return true;
     }
 
@@ -206,7 +206,7 @@ class KeycloakGuard implements Guard
         $allowed_resources = explode(',', $this->config['allowed_resources']);
 
         if (count(array_intersect($token_resource_access, $allowed_resources)) == 0) {
-            throw new ResourceAccessNotAllowedException("The decoded JWT token has not a valid `resource_access` allowed by API. Allowed resources by API: ".$this->config['allowed_resources']);
+            throw new ResourceAccessNotAllowedException("The decoded JWT token has not a valid `resource_access` allowed by API. Allowed resources by API: " . $this->config['allowed_resources']);
         }
     }
 
@@ -224,14 +224,14 @@ class KeycloakGuard implements Guard
             $token_resource_values = (array)$token_resource_access[$resource];
 
             if (array_key_exists('roles', $token_resource_values) &&
-              in_array($role, $token_resource_values['roles'])) {
+                in_array($role, $token_resource_values['roles'])) {
                 return true;
             }
         }
 
         return false;
     }
-    
+
     /**
      * Check if authenticated user has a any role into resource
      * @param string $resource
@@ -296,8 +296,8 @@ class KeycloakGuard implements Guard
     public function hasAnyScope(array $scopes): bool
     {
         return count(array_intersect(
-            $this->scopes(),
-            is_string($scopes) ? [$scopes] : $scopes
-        )) > 0;
+                $this->scopes(),
+                is_string($scopes) ? [$scopes] : $scopes
+            )) > 0;
     }
 }
